@@ -86,8 +86,17 @@
       <button>Trigger a Global Error</button>
     </section>
   </main>
-
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "d601c691c39941a5881919395fcf654c"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+                          
+  <script>
+    TrackJS.track('Testing TrackJS!');
+                        
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,13 +104,107 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      class ValidationError extends Error {
+      constructor(message) {
+      super(message);
+      this.name = "ValidationError";
+      }
+    }
+      try{
+        
+        if(firstNum=="" || secondNum==""){
+          throw "no value"
+        }
+        else if(secondNum=='0'&&operator=='/'){
+          throw "invaild divide 0"
+        }
+        else if (/^[a-zA-Z]+$/.test(firstNum) || /^[a-zA-Z]+$/.test(secondNum)){
+           throw new ValidationError("Not integer");
+        }
+        else{
+          output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+        }
+
+      }catch(err){
+      
+      console.error(err);
+      }
+      finally{
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      }
     });
+    
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
-
+    let count=0;
     // Start your code here
     // You may move this JS to another file if you wish
+    errorBtns[0].addEventListener('click', error =>{
+      console.log("Console Log Demo");
+    })
+    errorBtns[1].addEventListener('click', error =>{
+      console.log("Console Error Demo");
+    })
+    errorBtns[2].addEventListener('click', error =>{
+      count++;
+      console.count("Count Button");
+    })
+    errorBtns[3].addEventListener('click', error =>{
+      
+      console.warn("Count Warn Button");
+    })
+    errorBtns[4].addEventListener('click', error =>{
+      const number=2, f=3;
+      const errMsg= 'number does not equal to 3'
+      console.assert(number==f, {number, errMsg});
+    })
+    errorBtns[5].addEventListener('click', error =>{
+      console.clear();
+    })
+    errorBtns[6].addEventListener('click', error =>{
+      console.dir(errorBtns[6]);
+    })
+    errorBtns[7].addEventListener('click', error =>{
+      console.dir(errorBtns[7].outerHTML);
+    })
+    errorBtns[8].addEventListener('click', error =>{
+      console.group();
+    })
+    errorBtns[9].addEventListener('click', error =>{
+      console.groupEnd();
+    })
+    errorBtns[10].addEventListener('click', error =>{
+      console.table([
+        {
+        name: 'cse',
+        num: 110,
+         },
+         {
+           name: 'ece',
+           num: 101,
+          },
+          {
+            name: 'math',
+          num:111,
+          }]);
+
+    })
+    errorBtns[11].addEventListener('click', error =>{
+      console.time('Timer Button');
+    })
+    errorBtns[12].addEventListener('click', error =>{
+      console.timeEnd('Timer Button');
+    })
+    errorBtns[13].addEventListener('click', error =>{
+      const deep = () => { deeper(); };
+      const deeper = () => { deepest(); };
+      const deepest = () => { console.trace(); };
+  
+      deep();
+    })
+    errorBtns[14].addEventListener('click', error =>{
+      boom();
+    })
   </script>
 </body>
 
